@@ -54,8 +54,6 @@ end
 class_names.flatten!.sort!
 class_names.delete('index.html')
 
-puts class_names.join(', ')
-
 coverages = []
 class_names.each do |class_name|
   test_name = "#{class_name}Test"
