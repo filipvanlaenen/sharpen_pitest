@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# Runs the mutation coverage goal for PIT
+
+# If an argument is provided, comment out all @Test tags, and add them
+# in again for the class whose name is provided.
+if [ "$#" -eq 1 ]
+then
+  find . -type f -name "*.java" -exec sed -i 's/@Test/\/\/ @Test/g' {} +
+  find . -type f -name "$1.java" -exec sed -i 's/\/\/ @Test/@Test/g' {} +
+fi
+
+mvn clean install
+mvn org.pitest:pitest-maven:mutationCoverage
+
+# If an argument is provided, comment in all @Test tags again (also if proceeded
+# by multiple comment prefixes).
+if [ "$#" -eq 1 ]
+then
+  find . -type f -name "*.java" -exec sed -i 's/\(\/\/ \)\+@Test/@Test/g' {} +
+fi
+
+dirname=${PWD##*/}
+if [ "$#" -eq 1 ]
+then
+  mkdir -p ../${dirname}-pit-reports/$1
+  mv target/pit-reports/* ../${dirname}-pit-reports/$1
+else
+  mv target/pit-reports/* ../${dirname}-pit-reports/
+fi
