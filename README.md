@@ -71,3 +71,69 @@ Elements                 :  0 /  6 (6, 0.0%)
 
 I tend to put all my Git repositories in a directory called `~/git`. If you cloned TSVGJ in that directory, then the
 source code is in `~/git/tsvgj`, and you'll find the PITEST reports in a directory called `~/git/tsvgj-pit-reports`.
+
+Now, when I ran the report on TSVGJ, the overall mutation coverage was 99% (185 out of 187 mutations killed) for the
+project. That's close to full coverage, but as the report above shows, even though the `Circle` class has full coverage
+according to the regular PITEST report, when you run the `CircleTest` class in isolation, two of `Circle`'s mutations
+are in fact not covered by `CircleTest`.
+
+Does it matter? Yes, I think so. I like to be sure that when I make a mistake in a class like `Circle`, one of the unit
+tests in `CircleTest` will fail and notify me that something's wrong in `Circle`. However, there are two mutations that
+aren't covered by a unit test in `CircleTest`, but somewhere else. If I make a mistake related to those two mutations,
+it's not a unit test in `CircleTest` that will start to fail, but a unit test in one of the other test classes. The
+problem with that is the name of the failing test class will indicate the problem is somewhere else than in `Circle`,
+and that I will have to dig through the problem to discover where the real problem is located. I like that when I make
+a mistake in `Circle`, at least one unit test in `CircleTest` will start to fail.
+
+Now, try to run the following command:
+
+```
+sharpen_pitest.rb -r
+```
+
+This time, the script doesn't run PITEST at all, it just aggregates the results from the already existing reports.
+
+Try this:
+
+```
+sharpen_pitest.rb -r -v
+```
+
+This time, the result should be something like this:
+
+```
+ArcToCommand             :  0 /  1 (1, 0.0%)
+ClosePathCommand         :  0 /  1 (1, 0.0%)
+ElementType              :  0 /  1 (1, 0.0%)
+HexadecimalColorAttribute:  0 /  1 (1, 0.0%)
+KeywordColorAttribute    :  0 /  1 (1, 0.0%)
+LineToCommand            :  0 /  1 (1, 0.0%)
+MoveToCommand            :  0 /  1 (1, 0.0%)
+NumericArrayAttribute    :  0 /  1 (1, 0.0%)
+NumericAttribute         :  0 /  1 (1, 0.0%)
+Pattern                  : 16 / 17 (1, 94.1%)
+ReferringAttribute       :  0 /  1 (1, 0.0%)
+StringAttribute          :  0 /  1 (1, 0.0%)
+Circle                   : 23 / 25 (2, 92.0%)
+FontWeightValue          :  0 /  2 (2, 0.0%)
+Rect                     : 19 / 21 (2, 90.5%)
+Svg                      : 11 / 14 (3, 78.6%)
+EnumerationAttribute     :  0 /  4 (4, 0.0%)
+PathDefinition           :  0 /  4 (4, 0.0%)
+Attributes               :  0 /  5 (5, 0.0%)
+Elements                 :  0 /  6 (6, 0.0%)
+```
+
+The option `-v` removes the classes with full coverage, so you can concentrate on what's hopefully a short list of
+classes with surviving mutations.
+
+Next, try this:
+
+```
+pitest CircleTest
+```
+
+This time, you should see the output from Maven running PITEST. However, this runs PITEST with all test classes turned
+off except for `CircleTest`. The PITEST report is stored in a directory named
+`~/git/tsvgj-pit-reports/CircleTest/YYYYMMDDHHMM`, with `YYYYMMDDHHMM` a time stamp for when you ran the script. Use
+this command while adding more unit tests to `CirceTest` and verifying the mutation coverage of `Circle`.
