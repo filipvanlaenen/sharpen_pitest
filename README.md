@@ -137,3 +137,15 @@ This time, you should see the output from Maven running PITEST. However, this ru
 off except for `CircleTest`. The PITEST report is stored in a directory named
 `~/git/tsvgj-pit-reports/CircleTest/YYYYMMDDHHMM`, with `YYYYMMDDHHMM` a time stamp for when you ran the script. Use
 this command while adding more unit tests to `CirceTest` and verifying the mutation coverage of `Circle`.
+
+## Generalization
+
+The scripts in this repository are explicitly written for Java development on Linux with PITEST as test coverage tool.
+Porting the scripts to other operating systems should be easy -- for iOS it may even work out of the box.
+
+If you use another test coverage tool than PITEST, you will need to adapt the functionality to run the test coverage
+tool and the functionality to extract information from the reports. Adapting to another build tool than Maven requires
+a change in the `pitest` script, but should be rather easy. Finally, if you're using another programming language, you
+will probably need to do all of the above.
+
+Ideally, you wouldn't need the scripts in this repository though.
