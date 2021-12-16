@@ -141,7 +141,7 @@ this command while adding more unit tests to `CirceTest` and verifying the mutat
 ## Generalization
 
 The scripts in this repository are explicitly written for Java development on Linux with PITEST as test coverage tool.
-Porting the scripts to other operating systems should be easy --- for iOS it may even work out of the box.
+Porting the scripts to other operating systems should be easy – for iOS it may even work out of the box.
 
 If you use another test coverage tool than PITEST, you will need to adapt the functionality to run the test coverage
 tool and the functionality to extract information from the reports. Adapting to another build tool than Maven requires
