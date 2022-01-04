@@ -1,6 +1,9 @@
 # Sharpen PITEST
 
-This repository contains a little tool to sharpen your unit tests using [PITEST](https://pitest.org/).
+This repository contains a little tool to sharpen your unit tests using [PITEST](https://pitest.org/). Check out my blog
+article
+[“How to Sharpen Your Unit Tests”](https://medium.com/compendium/how-to-sharpen-your-unit-tests-58ee01329f15) for a
+broader description of what it means to “sharpen” your unit tests, and why you want to do thats.
 
 The basic idea is as follows: when I have a class `A`, I want to make sure that all the mutations in `A` are killed by
 unit tests in test class `ATest`. This ensures that test class `ATest` tests class `A` completely, as it is supposed to
