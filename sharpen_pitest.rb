@@ -9,8 +9,9 @@
 
 report_only = false
 survivors_only = false
+package_filter = nil
 
-ARGV.each do |arg|
+ARGV.each_with_index do |arg, i|
   if ['-h', '--help'].include?(arg)
     puts 'Sharpen PITEST (sharpen_pitest.rb)'
     puts 'Copyright © 2021 Filip van Laenen <f.a.vanlaenen@ieee.org>'
@@ -19,10 +20,13 @@ ARGV.each do |arg|
     puts '  sharpen_pitest.rb [<arguments>]'
     puts
     puts 'where arguments include:'
-    puts '  -h or --help           print this message and exit'
-    puts '  -r or --report-only    do not run PITEST but report based on the current PIT reports'
-    puts '  -v or --survivors-only do not output classes without full mutation coverage'
+    puts '  -h or --help                         print this message and exit'
+    puts '  -p <package> or --package <package>  consider classes in the provided package only'
+    puts '  -r or --report-only                  do not run PITEST but report based on the current PIT reports'
+    puts '  -v or --survivors-only               do not output classes without full mutation coverage'
     exit
+  elsif ['-p', '--package'].include?(arg)
+    package_filter = ARGV[i + 1]
   elsif ['-r', '--report-only'].include?(arg)
     report_only = true
   elsif ['-v', '--survivors-only'].include?(arg)
@@ -41,6 +45,13 @@ last_pit_report_dir = Dir.glob("../#{pit_reports_dir}/*/").map { |f| f.split('/'
 end.max
 
 package_dirs = Dir.glob("../#{pit_reports_dir}/#{last_pit_report_dir}/*/").map { |f| f.split('/').last }
+unless package_filter.nil?
+  if package_dirs.include?(package_filter)
+    package_dirs = [package_filter]
+  else
+    puts "WARNING: Package #{package_filter} could not be found in the list of packages; will continue without package filter."
+  end
+end
 
 class_names = []
 package_dir_by_class_name = {}
