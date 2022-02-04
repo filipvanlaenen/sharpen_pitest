@@ -23,13 +23,13 @@ ARGV.each_with_index do |arg, i|
     puts '  -h or --help                         print this message and exit'
     puts '  -p <package> or --package <package>  consider classes in the provided package only'
     puts '  -r or --report-only                  do not run PITEST but report based on the current PIT reports'
-    puts '  -v or --survivors-only               do not output classes without full mutation coverage'
+    puts '  -s or --survivors-only               do not output classes without full mutation coverage'
     exit
   elsif ['-p', '--package'].include?(arg)
     package_filter = ARGV[i + 1]
   elsif ['-r', '--report-only'].include?(arg)
     report_only = true
-  elsif ['-v', '--survivors-only'].include?(arg)
+  elsif ['-s', '--survivors-only'].include?(arg)
     survivors_only = true
   end
 end

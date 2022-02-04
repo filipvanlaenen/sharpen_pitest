@@ -99,7 +99,7 @@ This time, the script doesn't run PITEST at all, it just aggregates the results 
 Try this:
 
 ```
-sharpen_pitest.rb -r -v
+sharpen_pitest.rb -r -s
 ```
 
 This time, the result should be something like this:
@@ -127,7 +127,7 @@ Attributes               :  0 /  5 (5, 0.0%)
 Elements                 :  0 /  6 (6, 0.0%)
 ```
 
-The option `-v` removes the classes with full coverage, so you can concentrate on what's hopefully a short list of
+The option `-s` removes the classes with full coverage, so you can concentrate on what's hopefully a short list of
 classes with surviving mutations.
 
 Next, try this:
