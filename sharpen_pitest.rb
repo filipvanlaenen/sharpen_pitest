@@ -76,9 +76,11 @@ class_names.each do |class_name|
                             "#{package_dir_by_class_name[class_name]}/index.html")
   index_content.scan(%r{<tr>.*?</tr>}m) do |mtch|
     if mtch =~ />#{class_name}\.java/m
+      java_content = File.read("src/main/java/#{package_dir_by_class_name[class_name].split('.').join('/')}/#{class_name}.java")
+      equivalent_mutants = java_content.scan(%r{//\s+EQMU:}).count
       coverage_td = mtch.scan(%r{<td>.*?</td>}m)[2]
       coverage = coverage_td.scan(%r{<div class="coverage_legend">(\d+/\d+)</div>}).first.first.split('/')
-      killed = coverage.first.to_i
+      killed = coverage.first.to_i + equivalent_mutants
       number = coverage.last.to_i
       survived = number - killed
       percentage = killed.to_f / number
