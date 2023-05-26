@@ -34,10 +34,21 @@ function focused_pit() {
   mkdir -p ../${dirname}-pit-reports/${testclass}
   mv target/pit-reports/* ../${dirname}-pit-reports/${testclass}
 }
-
-if [ "$#" -eq 0 ]
+ 
+if [[ "$#" -eq 0 ]]
 then
   plain_pit
+elif [[ "$#" -eq 1 ]] && [[ $1 == "-g" ]]
+then
+  changes=$(git status -s | awk '{print $2}')
+  for change in $changes
+  do
+    if [[ ${change} == *java ]]
+    then
+      filename="$(basename -- $change .java)"
+      focused_pit "$filename"
+    fi
+  done
 else
   for arg in "$@"
   do
