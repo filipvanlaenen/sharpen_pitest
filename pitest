@@ -40,14 +40,12 @@ then
   plain_pit
 elif [[ "$#" -eq 1 ]] && [[ $1 == "-g" ]]
 then
-  changes=$(git status -s | awk '{print $2}')
+  # Capture lines from git status -s matching Java files.
+  changes=$(git status -s | awk '/\.java$/ {print $2}')
   for change in $changes
   do
-    if [[ ${change} == *java ]]
-    then
-      filename="$(basename -- $change .java)"
-      focused_pit "$filename"
-    fi
+    filename="$(basename -- $change .java)"
+    focused_pit "$filename"
   done
 else
   for arg in "$@"
