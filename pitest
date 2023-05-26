@@ -14,10 +14,15 @@ function plain_pit() {
 
 # This method runs PIT with a single parameter
 function focused_pit() {
+  local testclass=$1
+  if ! [[ ${testclass} == *Test ]]
+  then
+    testclass="${testclass}Test"
+  fi
   # Comment out all @Test tags, and add them in again for the class
   # whose name is provided.
   find . -type f -name "*.java" -exec sed -i 's/@Test/\/\/ @Test/g' {} +
-  find . -type f -name "$1.java" -exec sed -i 's/\/\/ @Test/@Test/g' {} +
+  find . -type f -name "$testclass.java" -exec sed -i 's/\/\/ @Test/@Test/g' {} +
   # Run PIT
   mvn clean install
   mvn org.pitest:pitest-maven:mutationCoverage
@@ -26,8 +31,8 @@ function focused_pit() {
   find . -type f -name "*.java" -exec sed -i 's/\(\/\/ \)\+@Test/@Test/g' {} +
   # Archive the PIT report
   dirname=${PWD##*/}
-  mkdir -p ../${dirname}-pit-reports/$1
-  mv target/pit-reports/* ../${dirname}-pit-reports/$1
+  mkdir -p ../${dirname}-pit-reports/${testclass}
+  mv target/pit-reports/* ../${dirname}-pit-reports/${testclass}
 }
 
 if [ "$#" -eq 0 ]
