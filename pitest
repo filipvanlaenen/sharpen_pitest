@@ -30,9 +30,12 @@ function focused_pit() {
   mv target/pit-reports/* ../${dirname}-pit-reports/$1
 }
 
-if [ "$#" -eq 1 ]
+if [ "$#" -eq 0 ]
 then
-  focused_pit $1
-else
   plain_pit
+else
+  for arg in "$@"
+  do
+    focused_pit "$arg"
+  done
 fi
