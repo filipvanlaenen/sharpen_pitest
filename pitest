@@ -19,15 +19,14 @@ function focused_pit() {
   then
     testclass="${testclass}Test"
   fi
-  # Comment out all @Test tags, and add them in again for the class
-  # whose name is provided.
-  find . -type f -name "*.java" -exec sed -i 's/@Test/\/\/ @Test/g' {} +
+  # Comment out all @Test tags in Java files ending with Test
+  find . -type f -name "*Test.java" -exec sed -i 's/@Test/\/\/ @Test/g' {} +
+  # Comment in all @Test tags for the class whose name is provided.
   find . -type f -name "$testclass.java" -exec sed -i 's/\/\/ @Test/@Test/g' {} +
   # Run PIT
   mvn clean install
   mvn org.pitest:pitest-maven:mutationCoverage
-  # Comment in all @Test tags again (also if proceeded by multiple
-  # comment prefixes).
+  # Comment in all @Test tags again (also if proceeded by multiple comment prefixes).
   find . -type f -name "*.java" -exec sed -i 's/\(\/\/ \)\+@Test/@Test/g' {} +
   # Archive the PIT report
   dirname=${PWD##*/}
