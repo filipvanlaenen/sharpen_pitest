@@ -65,6 +65,15 @@ end
 class_names.flatten!.sort!
 class_names.delete('index.html')
 
+ignore_map = Hash.new(0)
+if File.exists?('pitest.ignore')
+  ignore_content = File.read('pitest.ignore')
+  ignore_content.scan(%r{.*:\d+}) do |mtch|
+    parts = mtch.split(':')
+    ignore_map[parts.first] = parts.last.to_i
+  end
+end
+
 coverages = []
 class_names.each do |class_name|
   test_name = "#{class_name}Test"
@@ -80,7 +89,7 @@ class_names.each do |class_name|
       equivalent_mutants = java_content.scan(%r{//\s+EQMU:}).count
       coverage_td = mtch.scan(%r{<td>.*?</td>}m)[2]
       coverage = coverage_td.scan(%r{<div class="coverage_legend">(\d+/\d+)</div>}).first.first.split('/')
-      killed = coverage.first.to_i + equivalent_mutants
+      killed = coverage.first.to_i + equivalent_mutants + ignore_map[class_name]
       number = coverage.last.to_i
       survived = number - killed
       percentage = killed.to_f / number
