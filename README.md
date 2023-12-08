@@ -141,6 +141,15 @@ off except for `CircleTest`. The PITEST report is stored in a directory named
 `~/git/tsvgj-pit-reports/CircleTest/YYYYMMDDHHMM`, with `YYYYMMDDHHMM` a time stamp for when you ran the script. Use
 this command while adding more unit tests to `CirceTest` and verifying the mutation coverage of `Circle`.
 
+If you have classes with mutations in parts of the code that can't or shouldn't be tested, you can add an ignore file
+so they don't show up in the report. The name of the ignore file should be `pitest.ignore`, and it should contain lines
+with class names and the number of mutations to ignore, separated by a colon (`:`). Below is an example of such a file:
+
+```
+Attributes:2
+Elements:3
+```
+
 ## Generalization
 
 The scripts in this repository are explicitly written for Java development on Linux with PITEST as test coverage tool.
