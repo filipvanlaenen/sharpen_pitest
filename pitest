@@ -19,10 +19,15 @@ function focused_pit() {
   then
     testclass="${testclass}Test"
   fi
-  # Comment out all @Test tags in Java files ending with Test
+  # Comment out all @Test tags in Java files ending with Test and TestBase
   find . -type f -name "*Test.java" -exec sed -i 's/@Test/\/\/ @Test/g' {} +
+  find . -type f -name "*TestBase.java" -exec sed -i 's/@Test/\/\/ @Test/g' {} +
   # Comment in all @Test tags for the class whose name is provided.
   find . -type f -name "$testclass.java" -exec sed -i 's/\/\/ @Test/@Test/g' {} +
+  # Comment in all @Test tags for the test base class (if any)
+  extension=$(find . -type f -name "$testclass.java" -exec grep -o 'extends \w*TestBase' {} +)
+  testbaseclass=${extension//extends /}
+  find . -type f -name "$testbaseclass.java" -exec sed -i 's/\/\/ @Test/@Test/g' {} +
   # Run PIT
   mvn clean install
   mvn org.pitest:pitest-maven:mutationCoverage
