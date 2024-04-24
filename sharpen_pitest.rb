@@ -100,12 +100,21 @@ end
 
 coverages.sort! { |a, b| a[3] == b[3] ? a[0] <=> b[0] : a[3] <=> b[3] }
 
+total_killed = coverages.map { |a| a[1] }.sum
+total_number = coverages.map { |a| a[2] }.sum
+total_survived = coverages.map { |a| a[3] }.sum
+
 coverages.reject! { |c| c[3].zero? } if survivors_only
 
 class_name_width = coverages.map { |a| a[0] }.map(&:length).max
-number_width = coverages.map { |a| a[2] }.max.to_s.length
+number_width = total_number.to_s.length
 
 coverages.each do |c|
   puts "#{c[0].ljust(class_name_width)}: #{c[1].to_s.rjust(number_width)} / #{c[2].to_s.rjust(number_width)} " \
        "(#{c[3]}, #{format('%<p>.1f', p: c[4] * 100)}%)"
 end
+
+total_percentage = total_killed.to_f / total_number
+
+puts "#{'Σ'.rjust(class_name_width)}: #{total_killed.to_s.rjust(number_width)} / " \
+     "#{total_number.to_s.rjust(number_width)} (#{total_survived}, #{format('%<p>.1f', p: total_percentage * 100)}%)"
