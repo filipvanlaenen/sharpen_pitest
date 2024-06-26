@@ -66,7 +66,7 @@ class_names.flatten!.sort!
 class_names.delete('index.html')
 
 ignore_map = Hash.new(0)
-if File.exists?('pitest.ignore')
+if File.exist?('pitest.ignore')
   ignore_content = File.read('pitest.ignore')
   ignore_content.scan(%r{.*:\d+}) do |mtch|
     parts = mtch.split(':')
