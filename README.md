@@ -191,6 +191,20 @@ The report can also be filtered by package, using the option `-p` (or `--package
 sharpen_pitest.rb -r -p net.filipvanlaenen.kolektoj.hash
 ```
 
+Finally, the report can also be sorted in a different way than the default one. By default, the classes with the fewest
+surviving mutants are listed at the top. Use the option `-t a` (or `--sort a`) to sort the classes alphabetically as
+follows:
+
+```
+sharpen_pitest.rb -r -s -t a
+```
+
+Alternatively, you can also sort the classes descending by the percentage of killed mutants:
+
+```
+sharpen_pitest.rb -r -s -t p
+```
+
 ### Equivalent Mutations
 
 Sometimes PITEST produces equivalent mutations. Since they can't be killed, they will show up in the reports as

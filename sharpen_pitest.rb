@@ -7,9 +7,10 @@
 # its corresponding test class only.
 #
 
+package_filter = nil
 report_only = false
 survivors_only = false
-package_filter = nil
+sorting_key = 's'
 
 ARGV.each_with_index do |arg, i|
   if ['-h', '--help'].include?(arg)
@@ -24,6 +25,12 @@ ARGV.each_with_index do |arg, i|
     puts '  -p <package> or --package <package>  consider classes in the provided package only'
     puts '  -r or --report-only                  do not run PITEST but report based on the current PIT reports'
     puts '  -s or --survivors-only               do not output classes without full mutation coverage'
+    puts '  -t <key> or --sort <key>             sort classes according to sorting key'
+    puts
+    puts 'The sorting keys can be the following:'
+    puts '  a: alphabetically by name'
+    puts '  p: descending by percentage of killed mutants'
+    puts '  s: ascending by number of surviving mutants (default)'
     exit
   elsif ['-p', '--package'].include?(arg)
     package_filter = ARGV[i + 1]
@@ -31,6 +38,8 @@ ARGV.each_with_index do |arg, i|
     report_only = true
   elsif ['-s', '--survivors-only'].include?(arg)
     survivors_only = true
+  elsif ['-t', '--sort'].include?(arg)
+    sorting_key = ARGV[i + 1][0]
   end
 end
 
@@ -107,7 +116,14 @@ class_names.each do |class_name|
   end
 end
 
-coverages.sort! { |a, b| a[3] == b[3] ? a[0] <=> b[0] : a[3] <=> b[3] }
+case sorting_key
+when 'a'
+  coverages.sort! { |a, b| a[0] <=> b[0] }
+when 'p'
+  coverages.sort! { |a, b| a[4] == b[4] ? (a[3] == b[3] ? a[0] <=> b[0] : a[3] <=> b[3]) : b[4] <=> a[4] }
+else
+  coverages.sort! { |a, b| a[3] == b[3] ? a[0] <=> b[0] : a[3] <=> b[3] }
+end
 
 total_killed = coverages.map { |a| a[1] }.sum
 total_number = coverages.map { |a| a[2] }.sum
