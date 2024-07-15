@@ -49,7 +49,8 @@ unless package_filter.nil?
   if package_dirs.include?(package_filter)
     package_dirs = [package_filter]
   else
-    puts "WARNING: Package #{package_filter} could not be found in the list of packages; will continue without package filter."
+    puts "WARNING: Package #{package_filter} could not be found in the list of packages; will continue without" \
+         " package filter."
   end
 end
 
@@ -81,20 +82,28 @@ class_names.each do |class_name|
   last_pit_report_dir = Dir.glob("../#{pit_reports_dir}/#{test_name}/*/").map { |f| f.split('/').last }.select do |f|
     /^\d+$/.match?(f)
   end.max
-  index_content = File.read("../#{pit_reports_dir}/#{test_name}/#{last_pit_report_dir}/" \
-                            "#{package_dir_by_class_name[class_name]}/index.html")
-  index_content.scan(%r{<tr>.*?</tr>}m) do |mtch|
-    if mtch =~ />#{class_name}\.java/m
-      java_content = File.read("src/main/java/#{package_dir_by_class_name[class_name].split('.').join('/')}/#{class_name}.java")
-      equivalent_mutants = java_content.scan(%r{//\s+EQMU:}).count
-      coverage_td = mtch.scan(%r{<td>.*?</td>}m)[2]
-      coverage = coverage_td.scan(%r{<div class="coverage_legend">(\d+/\d+)</div>}).first.first.split('/')
-      killed = coverage.first.to_i + equivalent_mutants + ignore_map[class_name]
-      number = coverage.last.to_i
-      survived = number - killed
-      percentage = killed.to_f / number
-      coverages << [class_name, killed, number, survived, percentage]
+  index_file_name = "../#{pit_reports_dir}/#{test_name}/#{last_pit_report_dir}/" \
+                    "#{package_dir_by_class_name[class_name]}/index.html"
+  if File.exist?(index_file_name)
+    index_content = File.read(index_file_name)
+    index_content.scan(%r{<tr>.*?</tr>}m) do |mtch|
+	  if mtch =~ />#{class_name}\.java/m
+	    java_content = File.read("src/main/java/#{package_dir_by_class_name[class_name].split('.').join('/')}/#{class_name}.java")
+	    equivalent_mutants = java_content.scan(%r{//\s+EQMU:}).count
+	    coverage_td = mtch.scan(%r{<td>.*?</td>}m)[2]
+	    coverage = coverage_td.scan(%r{<div class="coverage_legend">(\d+/\d+)</div>}).first.first.split('/')
+	    killed = coverage.first.to_i + equivalent_mutants + ignore_map[class_name]
+	    number = coverage.last.to_i
+	    survived = number - killed
+	    percentage = killed.to_f / number
+        coverages << [class_name, killed, number, survived, percentage]
+      end
     end
+  else
+    puts "WARNING: Report for test class #{test_name} could not be found. Consider running the following command to" \
+         " remediate the problem:"
+    puts "        pitest #{test_name}"
+    exit
   end
 end
 
