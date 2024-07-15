@@ -193,6 +193,22 @@ sharpen_pitest.rb -r -p net.filipvanlaenen.kolektoj.hash
 
 ### Equivalent Mutations
 
+Sometimes PITEST produces equivalent mutations. Since they can't be killed, they will show up in the reports as
+survivors. In order to avoid any [broken window](https://en.wikipedia.org/wiki/Broken_windows_theory) effect from
+legitimate surviving equivalent mutations cluttering the reports, equivalent mutations can be marked in the source
+code using the `EQMU` keyword as follows:
+
+```
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        if (first < last) {
+            …
+        }
+```
+
+Each appearance of the `EQMU` keyword right at the beginning of a single-line comment (a comment starting with two
+forward slashes (`//`) followed by some whitespace) will be counted as a marker for an equivalent mutation. There may
+be more than one such marker in the same Java source code file, but each one should be registered on its own line.
+
 ### Bulk Ignoring
 
 ## Generalization
