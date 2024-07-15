@@ -72,6 +72,10 @@ package_dirs.map do |package_dir|
   class_names << local_class_names
   local_class_names.each { |lc| package_dir_by_class_name[lc] = package_dir }
 end
+if class_names.empty?
+  puts 'No classes found in the reports, or no reports generated.'
+  exit
+end
 class_names.flatten!.sort!
 class_names.delete('index.html')
 
