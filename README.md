@@ -211,6 +211,20 @@ be more than one such marker in the same Java source code file, but each one sho
 
 ### Bulk Ignoring
 
+Not all classes may have the same relevance for test coverage. Classes communicating with the outside world, like e.g.
+the command line interface or classes interacting with the file system, typically fall into that category because
+they're so hard to test through automated unit tests. Note however that parts of these classes may be covered by unit
+tests, so excluding them altogether isn't always the right thing to do.
+
+Mutations from classes that aren't so relevant for our test coverage can be bulk ignored through registration in a
+special file named `pitest.ignore`. In this file, each classes should be listed by its name, followed by a colon (`:`)
+and the number or mutations that should be ignored for this class, like this:
+
+```
+CommandLineInterface:60
+FileReader:34
+```
+
 ## Generalization
 
 The scripts in this repository are explicitly written for Java development on Linux with PITEST as test coverage tool.
