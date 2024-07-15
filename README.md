@@ -18,6 +18,13 @@ The scripts in this repository do two main things:
 In addition to that, there is some logic to aggregate and present the results, and a couple of options that I found
 useful to use the scripts effeciently.
 
+* [Getting Started](#getting-started)
+* [Overview](#overview)
+  * [Running the Script](#running-the-script)
+  * [Equivalent Mutations](#equivalent-mutations)
+  * [Bulk Ignoring](#bulk-ignoring)
+* [Generalization](#generalization)
+
 ## Getting Started
 
 The scripts are written for Java development on a Linux machine with Ruby already installed. It assumes that you have a
@@ -149,6 +156,44 @@ with class names and the number of mutations to ignore, separated by a colon (`:
 Attributes:2
 Elements:3
 ```
+
+## Overview
+
+### Running the Script
+
+To get an help message with a basic explanation of all available options, use the option `-h` (or `--help`) as follows:
+
+```
+sharpen_pitest.rb -h
+```
+
+To produce and output a full report, run the script without any of the options:
+
+```
+sharpen_pitest.rb
+```
+
+If you only want to see the current report, use the option `-r` (or `--report-only`):
+
+```
+sharpen_pitest.rb -r
+```
+
+Classes that are fully covered can be filtered out from the report using the option `-s` (or `--survivors-only`):
+
+```
+sharpen_pitest.rb -r -s
+```
+
+The report can also be filtered by package, using the option `-p` (or `--package`) with a parameter like this:
+
+```
+sharpen_pitest.rb -r -p net.filipvanlaenen.kolektoj.hash
+```
+
+### Equivalent Mutations
+
+### Bulk Ignoring
 
 ## Generalization
 
