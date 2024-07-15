@@ -115,7 +115,7 @@ total_survived = coverages.map { |a| a[3] }.sum
 
 coverages.reject! { |c| c[3].zero? } if survivors_only
 
-class_name_width = coverages.map { |a| a[0] }.map(&:length).max
+class_name_width = [0, coverages.map { |a| a[0] }.map(&:length)].flatten.max
 number_width = total_number.to_s.length
 
 coverages.each do |c|
