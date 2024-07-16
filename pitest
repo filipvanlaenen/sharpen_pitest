@@ -9,6 +9,7 @@ function plain_pit() {
   mvn org.pitest:pitest-maven:mutationCoverage
   # Archive the PIT report
   dirname=${PWD##*/}
+  mkdir -p ../${dirname}-pit-reports/
   mv target/pit-reports/* ../${dirname}-pit-reports/
 }
 
