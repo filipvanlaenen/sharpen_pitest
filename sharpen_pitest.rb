@@ -14,8 +14,8 @@ sorting_key = 's'
 
 ARGV.each_with_index do |arg, i|
   if ['-h', '--help'].include?(arg)
-    puts 'Sharpen PITEST (sharpen_pitest.rb)'
-    puts 'Copyright © 2021 Filip van Laenen <f.a.vanlaenen@ieee.org>'
+    puts 'Sharpen PITEST 1.0.0'
+    puts 'Copyright © 2024 Filip van Laenen <f.a.vanlaenen@ieee.org>'
     puts
     puts 'Usage: '
     puts '  sharpen_pitest.rb [<arguments>]'
