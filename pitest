@@ -13,6 +13,18 @@ function plain_pit() {
   mv target/pit-reports/* ../${dirname}-pit-reports/
 }
 
+# Comment in all @Test tags for the test base class (recursively, if any)
+function enable_testbases() {
+  local testclass=$1
+  extension=$(find . -type f -name "$testclass.java" -exec grep -o 'extends \w*TestBase' {} +)
+  testbaseclass=${extension//extends /}
+  if ! [[ -z "$testbaseclass" ]]
+  then
+    find . -type f -name "$testbaseclass.java" -exec sed -i 's/\/\/ @Test/@Test/g' {} +
+    enable_testbases "$testbaseclass"
+  fi
+}
+
 # This method runs PIT with a single parameter
 function focused_pit() {
   local testclass=$1
@@ -26,9 +38,7 @@ function focused_pit() {
   # Comment in all @Test tags for the class whose name is provided.
   find . -type f -name "$testclass.java" -exec sed -i 's/\/\/ @Test/@Test/g' {} +
   # Comment in all @Test tags for the test base class (if any)
-  extension=$(find . -type f -name "$testclass.java" -exec grep -o 'extends \w*TestBase' {} +)
-  testbaseclass=${extension//extends /}
-  find . -type f -name "$testbaseclass.java" -exec sed -i 's/\/\/ @Test/@Test/g' {} +
+  enable_testbases "$testclass"
   # Run PIT
   mvn clean install
   mvn org.pitest:pitest-maven:mutationCoverage
