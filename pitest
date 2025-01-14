@@ -16,8 +16,9 @@ function plain_pit() {
 # Comment in all @Test tags for the test base class (recursively, if any)
 function enable_testbases() {
   local testclass=$1
-  extension=$(find . -type f -name "$testclass.java" -exec grep -o 'extends \w*TestBase' {} +)
-  testbaseclass=${extension//extends /}
+  extension=$(find . -type f -name "$testclass.java" -exec grep -z -o 'extends.* \w*TestBase' {} + | sed 's/\x0//g')
+  extensionwithoutnull=`echo $extension | sed 's/\x0//g'`
+  testbaseclass=`echo "$extensionwithoutnull" | awk '{print $NF}'`
   if ! [[ -z "$testbaseclass" ]]
   then
     find . -type f -name "$testbaseclass.java" -exec sed -i 's/\/\/ @Test/@Test/g' {} +
