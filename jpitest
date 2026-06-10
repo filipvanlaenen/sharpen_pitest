@@ -1,0 +1,3 @@
+#!/bin/bash
+
+java --source 21 --enable-preview ~/bin/pitest.java "$@"
