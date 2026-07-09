@@ -14,7 +14,12 @@ fi
 
 mkdir "$SHARPEN_PITEST_DIR"
 
+cd ..
+mvn clean compile assembly:single
+cd bin
+
 cp sharpen_pitest.sh "$SHARPEN_PITEST_DIR"
+cp ../target/sharpenpitest-1.0-SNAPSHOT-jar-with-dependencies.jar "$SHARPEN_PITEST_DIR"
 chmod a+x "$SHARPEN_PITEST_DIR/sharpen_pitest.sh"
 
 ln -f "$SHARPEN_PITEST_DIR/sharpen_pitest.sh" /usr/bin/sharpen_pitest
