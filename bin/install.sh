@@ -7,7 +7,8 @@
 
 SHARPEN_PITEST_DIR="/opt/sharpen_pitest"
 
-if [ -d "$SHARPEN_PITEST_DIR" ]; then
+if [ -d "$SHARPEN_PITEST_DIR" ]
+then
     rm -R "$SHARPEN_PITEST_DIR"
 fi
 
